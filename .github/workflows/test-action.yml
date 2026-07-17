@@ -1,0 +1,29 @@
+name: Test action
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+      - LICENSE
+      - .gitignore
+      - .github/**
+      - "!.github/workflows/test-action.yml"
+  pull_request:
+    paths-ignore:
+      - README.md
+      - LICENSE
+      - .gitignore
+      - .github/**
+      - "!.github/workflows/test-action.yml"
+jobs:
+  branch:
+    concurrency: ${{ github.workflow }}-branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: echo $RANDOM > random.txt
+      - uses: ./
+        with:
+          push-branch: test-branch
+          push-force: true
